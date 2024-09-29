@@ -2,6 +2,8 @@
 
 namespace App\Repository;
 
+use App\DTO\PersonDTO;
+use App\DTO\UpdatePersonDTO;
 use App\Entity\Person;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -16,28 +18,38 @@ class PersonRepository extends ServiceEntityRepository
         parent::__construct($registry, Person::class);
     }
 
-    //    /**
-    //     * @return Person[] Returns an array of Person objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('p.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function savePerson(PersonDTO $personDTO): Person {
+        $person = new Person();
+        $person->setName($personDTO->name);
+        $person->setCpf($personDTO->cpf);
 
-    //    public function findOneBySomeField($value): ?Person
-    //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        $entityManager = $this->getEntityManager();
+        $entityManager->persist($person);
+        $entityManager->flush();
+
+        return $person;
+    }
+
+    public function getPerson($id): Person {
+        $entityManager = $this->getEntityManager();
+
+        return $entityManager->getRepository(Person::class)->find($id);
+    }
+
+    public function updatePerson(Person $person, UpdatePersonDTO $updatePersonDTO): Person {
+        $entityManager = $this->getEntityManager();
+        $person->setName($updatePersonDTO->name);
+        $entityManager->flush();
+        return $person;
+    }
+
+    public function listPerson() {
+        return $this->findAll();
+    }
+
+    public function deletePerson(Person $person): void {
+        $entityManager = $this->getEntityManager();
+        $entityManager->remove($person);
+        $entityManager->flush();
+    }
 }
