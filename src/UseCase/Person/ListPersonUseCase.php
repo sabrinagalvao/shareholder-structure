@@ -1,11 +1,10 @@
 <?php
 
-namespace App\UseCase;
+namespace App\UseCase\Person;
 
-use App\Entity\Person;
 use App\Repository\PersonRepository;
 
-class GetPersonUseCase {
+class ListPersonUseCase {
     private PersonRepository $personRepository;
 
     public function __construct(
@@ -14,7 +13,7 @@ class GetPersonUseCase {
         $this->personRepository = $personRepository;
     }
 
-    public function execute($id): Person {
-        return $this->personRepository->getPerson($id);
+    public function execute(): array {
+        return $this->personRepository->listPerson();
     }
 }

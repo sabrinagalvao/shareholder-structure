@@ -2,8 +2,8 @@
 
 namespace App\Repository;
 
-use App\DTO\PersonDTO;
-use App\DTO\UpdatePersonDTO;
+use App\DTO\Person\PersonDTO;
+use App\DTO\Person\UpdatePersonDTO;
 use App\Entity\Person;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;

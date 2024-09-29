@@ -1,11 +1,11 @@
 <?php
 
-namespace App\UseCase;
+namespace App\UseCase\Person;
 
-use App\DTO\PersonDTO;
+use App\Entity\Person;
 use App\Repository\PersonRepository;
 
-class CreatePersonUseCase {
+class GetPersonUseCase {
     private PersonRepository $personRepository;
 
     public function __construct(
@@ -14,8 +14,7 @@ class CreatePersonUseCase {
         $this->personRepository = $personRepository;
     }
 
-    public function execute(PersonDTO $personDTO) {
-        $person = $this->personRepository->savePerson($personDTO);
-        return $person;
+    public function execute($id): Person {
+        return $this->personRepository->getPerson($id);
     }
 }

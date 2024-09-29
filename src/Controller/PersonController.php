@@ -2,18 +2,17 @@
 
 namespace App\Controller;
 
-use App\DTO\PersonDTO;
-use App\DTO\UpdatePersonDTO;
-use App\UseCase\CreatePersonUseCase;
-use App\UseCase\DeletePersonUseCase;
-use App\UseCase\GetPersonUseCase;
-use App\UseCase\ListPersonUseCase;
-use App\UseCase\UpdatePersonUseCase;
+use App\DTO\Person\PersonDTO;
+use App\DTO\Person\UpdatePersonDTO;
+use App\UseCase\Person\CreatePersonUseCase;
+use App\UseCase\Person\DeletePersonUseCase;
+use App\UseCase\Person\GetPersonUseCase;
+use App\UseCase\Person\ListPersonUseCase;
+use App\UseCase\Person\UpdatePersonUseCase;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
+use Symfony\Component\Routing\Annotation\Route;
 
 class PersonController extends AbstractController
 {

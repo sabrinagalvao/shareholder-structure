@@ -2,6 +2,8 @@
 
 namespace App\Repository;
 
+use App\DTO\Company\CompanyDTO;
+use App\DTO\Company\UpdateCompanyDTO;
 use App\Entity\Company;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -16,28 +18,46 @@ class CompanyRepository extends ServiceEntityRepository
         parent::__construct($registry, Company::class);
     }
 
-//    /**
-//     * @return Company[] Returns an array of Company objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('c.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function saveCompany(CompanyDTO $companyDTO): Company {
+        $company = new Company();
+        $company->setName($companyDTO->name);
+        $company->setCnpj($companyDTO->cnpj);
+        $company->setActive($companyDTO->isActive);
 
-//    public function findOneBySomeField($value): ?Company
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        $entityManager = $this->getEntityManager();
+        $entityManager->persist($company);
+        $entityManager->flush();
+
+        return $company;
+    }
+
+    public function getCompany($id): Company {
+        $entityManager = $this->getEntityManager();
+
+        return $entityManager->getRepository(Company::class)->find($id);
+    }
+
+    public function updateCompany(Company $company, UpdateCompanyDTO $updateCompanyDTO): Company {
+        $entityManager = $this->getEntityManager();
+
+        if ($updateCompanyDTO->name !== null) {
+            $company->setName($updateCompanyDTO->name);
+        }
+        if ($updateCompanyDTO->isActive !== null) {
+            $company->setActive($updateCompanyDTO->isActive);
+        }
+        $entityManager->flush();
+        
+        return $company;
+    }
+
+    public function listCompany() {
+        return $this->findAll();
+    }
+
+    public function deleteCompany(Company $company): void {
+        $entityManager = $this->getEntityManager();
+        $entityManager->remove($company);
+        $entityManager->flush();
+    }
 }

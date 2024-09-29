@@ -1,10 +1,11 @@
 <?php
 
-namespace App\UseCase;
+namespace App\UseCase\Person;
 
+use App\DTO\Person\PersonDTO;
 use App\Repository\PersonRepository;
 
-class ListPersonUseCase {
+class CreatePersonUseCase {
     private PersonRepository $personRepository;
 
     public function __construct(
@@ -13,7 +14,8 @@ class ListPersonUseCase {
         $this->personRepository = $personRepository;
     }
 
-    public function execute(): array {
-        return $this->personRepository->listPerson();
+    public function execute(PersonDTO $personDTO) {
+        $person = $this->personRepository->savePerson($personDTO);
+        return $person;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\UseCase;
+namespace App\UseCase\Person;
 
 use App\Repository\PersonRepository;
 

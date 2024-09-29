@@ -1,8 +1,8 @@
 <?php
 
-namespace App\UseCase;
+namespace App\UseCase\Person;
 
-use App\DTO\UpdatePersonDTO;
+use App\DTO\Person\UpdatePersonDTO;
 use App\Entity\Person;
 use App\Repository\PersonRepository;
 
