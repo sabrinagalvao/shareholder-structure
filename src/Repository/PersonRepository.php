@@ -7,6 +7,7 @@ use App\DTO\Person\UpdatePersonDTO;
 use App\Entity\Person;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @extends ServiceEntityRepository<Person>
@@ -22,6 +23,9 @@ class PersonRepository extends ServiceEntityRepository
         $person = new Person();
         $person->setName($personDTO->name);
         $person->setCpf($personDTO->cpf);
+        foreach($personDTO->companies as $company) {
+            $person->addCompany($company);
+        }
 
         $entityManager = $this->getEntityManager();
         $entityManager->persist($person);
@@ -32,13 +36,25 @@ class PersonRepository extends ServiceEntityRepository
 
     public function getPerson($id): Person {
         $entityManager = $this->getEntityManager();
+        $person = $entityManager->getRepository(Person::class)->find($id);
+        if(!$person) throw new NotFoundHttpException("Person not found!");
+        return $person;
 
-        return $entityManager->getRepository(Person::class)->find($id);
     }
 
     public function updatePerson(Person $person, UpdatePersonDTO $updatePersonDTO): Person {
         $entityManager = $this->getEntityManager();
-        $person->setName($updatePersonDTO->name);
+
+        if ($updatePersonDTO->name !== null) {
+            $person->setName($updatePersonDTO->name);
+        }
+
+        if ($updatePersonDTO->companiesToAdd !== null) {
+            foreach($updatePersonDTO->companiesToAdd as $company) {
+                $person->addCompany($company);
+            }
+        }
+
         $entityManager->flush();
         return $person;
     }

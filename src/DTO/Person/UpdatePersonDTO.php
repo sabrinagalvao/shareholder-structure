@@ -10,6 +10,10 @@ class UpdatePersonDTO
         #[Assert\NotBlank]
         #[Assert\Type('string')]
         public readonly string $name,
+
+        #[Assert\NotNull]
+        #[Assert\Type('array')]
+        public array $companiesToAdd,
     ) {
     }
 }

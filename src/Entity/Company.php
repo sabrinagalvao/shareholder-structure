@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: CompanyRepository::class)]
@@ -16,21 +17,26 @@ class Company
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+    #[Groups(['company'])]
     private ?Uuid $id = null;
 
     #[ORM\Column(length: 14)]
+    #[Groups(['company'])]
     private ?string $cnpj = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['company'])]
     private ?string $name = null;
-
+    
     #[ORM\Column]
+    #[Groups(['company'])]
     private ?bool $isActive = null;
 
     /**
      * @var Collection<int, Person>
      */
     #[ORM\ManyToMany(targetEntity: Person::class, mappedBy: 'companies')]
+    #[Groups(['company_with_shareholders'])]
     private Collection $shareholders;
 
     public function __construct()
@@ -91,7 +97,6 @@ class Company
     {
         if (!$this->shareholders->contains($shareholder)) {
             $this->shareholders->add($shareholder);
-            $shareholder->addCompany($this);
         }
 
         return $this;

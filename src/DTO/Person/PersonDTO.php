@@ -15,6 +15,10 @@ class PersonDTO
         #[Assert\Type('string')]
         #[Assert\Length(11)]
         public readonly string $cpf,
+
+        #[Assert\NotNull]
+        #[Assert\Type('array')]
+        public array $companies,
     ) {
     }
 }

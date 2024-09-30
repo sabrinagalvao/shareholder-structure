@@ -5,8 +5,10 @@ namespace App\Repository;
 use App\DTO\Company\CompanyDTO;
 use App\DTO\Company\UpdateCompanyDTO;
 use App\Entity\Company;
+use App\Entity\Person;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @extends ServiceEntityRepository<Company>
@@ -33,8 +35,9 @@ class CompanyRepository extends ServiceEntityRepository
 
     public function getCompany($id): Company {
         $entityManager = $this->getEntityManager();
-
-        return $entityManager->getRepository(Company::class)->find($id);
+        $company = $entityManager->getRepository(Company::class)->find($id);
+        if(!$company) throw new NotFoundHttpException("Company not found!");
+        return $company;
     }
 
     public function updateCompany(Company $company, UpdateCompanyDTO $updateCompanyDTO): Company {
@@ -59,5 +62,14 @@ class CompanyRepository extends ServiceEntityRepository
         $entityManager = $this->getEntityManager();
         $entityManager->remove($company);
         $entityManager->flush();
+    }
+
+    public function removeShareholders(Company $company, array $shareholders): Company {
+        $entityManager = $this->getEntityManager();
+        foreach($shareholders as $shareholder) {
+            $company->removeShareholder($shareholder);
+        }
+        $entityManager->flush();
+        return $company;
     }
 }

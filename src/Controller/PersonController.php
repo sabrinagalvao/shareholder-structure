@@ -27,7 +27,7 @@ class PersonController extends AbstractController
         GetPersonUseCase $getPersonUseCase,
         CreatePersonUseCase $createPersonUseCase,
         UpdatePersonUseCase $updatePersonUseCase,
-        DeletePersonUseCase $deletePersonUseCase
+        DeletePersonUseCase $deletePersonUseCase,
     ) {
         $this->listPersonUseCase = $listPersonUseCase;
         $this->getPersonUseCase = $getPersonUseCase;
@@ -40,16 +40,14 @@ class PersonController extends AbstractController
     public function index(): JsonResponse
     {
         $persons = $this->listPersonUseCase->execute();
-
-        return $this->json(['persons' => $persons]);
+        return $this->json($persons, 200, [], ['groups' => ['person', 'company', 'person_with_companies']]);
     }
 
     #[Route('/person/{id}', name: 'get_person', methods: ['GET'])]
     public function show(string $id): JsonResponse
     {
         $person = $this->getPersonUseCase->execute($id);
-
-        return $this->json(['person' => $person]);
+        return $this->json($person, 200, [], ['groups' => ['person', 'company', 'person_with_companies']]);
     }
 
     #[Route('/person', name: 'create_person', methods: ['POST'])]
@@ -58,8 +56,7 @@ class PersonController extends AbstractController
     ): JsonResponse
     {
         $person = $this->createPersonUseCase->execute($personDTO);
-
-        return $this->json(['person' => $person], 201);
+        return $this->json($person, 201, [], ['groups' => ['person', 'company', 'person_with_companies']]);
     }
 
     #[Route('/person/{id}', name: 'update_person', methods: ['PATCH'])]
@@ -70,7 +67,7 @@ class PersonController extends AbstractController
     {
         $person = $this->updatePersonUseCase->execute($id, $updatePersonDTO);
 
-        return $this->json(['person' => $person]);
+        return $this->json($person, 200, [], ['groups' => ['person', 'company', 'person_with_companies']]);
     }
 
     #[Route('/person/{id}', name: 'delete_person', methods: ['DELETE'])]
